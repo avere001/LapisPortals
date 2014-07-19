@@ -1,0 +1,7 @@
+name: LapisPortals
+main: me.fetusdip.LapisPortals.EnderPortals
+version: 1.3.11
+description: >
+             A portal system using player made portals made of lapis blocks
+softdepend: [Vault,Multiverse-Core,WorldWarp,MultiWorld,PlgWarp]
+prefix: LapisPortals
