@@ -11,6 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -34,11 +35,12 @@ public class PlayerListener implements Listener {
 	@EventHandler
 	public void onPlayerPlace(BlockPlaceEvent event) {
 
-		if ((event.getBlockPlaced().getType() == Material.WOODEN_DOOR)
+		if ((event.getBlockPlaced().getType() == Material.WOODEN_DOOR || event
+				.getBlockPlaced().getType() == Material.IRON_DOOR_BLOCK)
 				&& (VaultHook.hasPermission(event.getPlayer(),
 						VaultHook.Perm.CREATE))) {
-			int facing = (((Directional) event.getBlockPlaced().getState().getData())
-					.getFacing().ordinal() + 2) % 4;
+			int facing = (((Directional) event.getBlockPlaced().getState()
+					.getData()).getFacing().ordinal() + 2) % 4;
 			Location tmp = event.getBlock().getLocation();
 			Location loc = new Location(tmp.getWorld(), tmp.getX(),
 					tmp.getY() - 1.0D, tmp.getZ());
@@ -58,22 +60,44 @@ public class PlayerListener implements Listener {
 			}
 		}
 	}
-	
-	@EventHandler
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onRightClickDoor(PlayerInteractEvent event) {
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Block block = event.getClickedBlock();
+
+			if (block.getType() == Material.IRON_DOOR_BLOCK) {
+				if (block.getRelative(BlockFace.DOWN).getType() == Material.IRON_DOOR_BLOCK)
+					block = block.getRelative(BlockFace.DOWN);
+				
+				if (EnderPortals.getFileHandler().isPortalDoor(block)) {
+					BlockState state = block.getState();
+					Openable door = (Openable) state.getData();
+					door.setOpen(!door.isOpen());
+					state.update();
+				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		EnderPortal portal = EnderPortals.getFileHandler().onPortal(
 				event.getPlayer());
-		
-		if (portal == null) return;
-		
-		if (		(portal.isStillValid(this.plugin))
+
+		if (portal == null)
+			return;
+
+		if ((portal.isStillValid(this.plugin))
 				&& (event.getClickedBlock() != null)
 				&& (VaultHook.hasPermission(event.getPlayer(),
 						VaultHook.Perm.TELEPORT))) {
-			if ((event.getClickedBlock().getType() == Material.WOODEN_DOOR)
+			if ((event.getClickedBlock().getType() == Material.WOODEN_DOOR || event
+					.getClickedBlock().getType() == Material.IRON_DOOR_BLOCK)
 					&& (event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
 				Block tmpBlock = event.getClickedBlock();
-				if (tmpBlock.getRelative(BlockFace.DOWN).getType() == Material.WOODEN_DOOR)
+				if (tmpBlock.getRelative(BlockFace.DOWN).getType() == Material.WOODEN_DOOR
+						|| tmpBlock.getRelative(BlockFace.DOWN).getType() == Material.IRON_DOOR_BLOCK)
 					tmpBlock = tmpBlock.getRelative(BlockFace.DOWN);
 				Openable door = (Openable) tmpBlock.getState().getData();
 				if (door.isOpen()) {
@@ -150,8 +174,9 @@ public class PlayerListener implements Listener {
 								}
 							}
 							p.teleport(toLoc);
-							BlockState toDoorState = toLoc.getBlock().getState();
-							Openable toDoor = (Openable)toDoorState.getData();
+							BlockState toDoorState = toLoc.getBlock()
+									.getState();
+							Openable toDoor = (Openable) toDoorState.getData();
 							toDoor.setOpen(true);
 							toDoorState.update();
 							toLoc.getBlock()

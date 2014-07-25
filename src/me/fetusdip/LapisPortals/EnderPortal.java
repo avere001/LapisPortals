@@ -127,6 +127,10 @@ public class EnderPortal {
 	public int getF() {
 		return this.f;
 	}
+	
+	public Block getMainBlock() {
+		return lapis[7];
+	}
 
 	public static ValidPortalReturn validateLocation(Location loc, int facing,
 			EnderPortals plugin) {
@@ -140,8 +144,8 @@ public class EnderPortal {
 		}
 		boolean valid = true;
 		if ((loc.getBlock().getType() == portalMaterial)
-				&& (aLoc[0].getBlock().getType() == Material.WOODEN_DOOR)) {
-			if ((aLoc[1].getBlock().getType() == Material.WOODEN_DOOR)
+				&& (aLoc[0].getBlock().getType() == Material.WOODEN_DOOR || aLoc[0].getBlock().getType() == Material.IRON_DOOR_BLOCK)) {
+			if ((aLoc[1].getBlock().getType() == Material.WOODEN_DOOR || aLoc[1].getBlock().getType() == Material.IRON_DOOR_BLOCK)
 					&& (aLoc[2].getBlock().getType() == portalMaterial)) {
 				
 				for (int iii = 0; iii < 3; iii++) {
@@ -202,7 +206,7 @@ public class EnderPortal {
 			return false;
 		}
 		Location loc = getLocation();
-		if (block.getType() == Material.WOODEN_DOOR) {
+		if (block.getType() == Material.WOODEN_DOOR || block.getType() == Material.IRON_DOOR) {
 			if ((loc.add(0.0D, 1.0D, 0.0D).getBlock().equals(block))
 					|| (loc.add(0.0D, 1.0D, 0.0D).getBlock().equals(block))) {
 				return true;

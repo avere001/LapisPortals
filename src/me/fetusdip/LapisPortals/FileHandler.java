@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 public class FileHandler {
@@ -133,22 +134,29 @@ public class FileHandler {
 	}
 
 	public void purgeInvalidPortals() {
-		ListIterator<EnderPortal> itr = this.globalportals.listIterator();
+		ListIterator<EnderPortal> itr = null;
+
+		itr = this.globalportals.listIterator();
 		while (itr.hasNext()) {
 			EnderPortal p = (EnderPortal) itr.next();
+			Material type = p.getLocation().clone().add(0.0D, 1.0D, 0.0D)
+					.getBlock().getType();
+
 			if ((p.isWorldLoaded())
-					&& (p.getLocation().clone().add(0.0D, 1.0D, 0.0D)
-							.getBlock().getType() != Material.WOODEN_DOOR)) {
+					&& (type != Material.WOODEN_DOOR && type != Material.IRON_DOOR_BLOCK)) {
 				itr.remove();
 				purgePortals(p.getHash());
 			}
 		}
+
 		itr = this.portals.listIterator();
 		while (itr.hasNext()) {
 			EnderPortal p = (EnderPortal) itr.next();
+			Material type = p.getLocation().clone().add(0.0D, 1.0D, 0.0D)
+					.getBlock().getType();
+
 			if ((p.isWorldLoaded())
-					&& (p.getLocation().clone().add(0.0D, 1.0D, 0.0D)
-							.getBlock().getType() != Material.WOODEN_DOOR)) {
+					&& (type != Material.WOODEN_DOOR && type != Material.IRON_DOOR_BLOCK)) {
 				itr.remove();
 			}
 		}
@@ -191,21 +199,24 @@ public class FileHandler {
 	}
 
 	public EnderPortal onPortal(Player p) {
-		Location pLoc = p.getLocation().add(0.0D, -1.0D, 0.0D).getBlock().getLocation();
+		Location pLoc = p.getLocation().add(0.0D, -1.0D, 0.0D).getBlock()
+				.getLocation();
 		for (EnderPortal portal : this.globalportals) {
 			if (portal.isWorldLoaded()) {
-				Location portBlock = portal.getLocation().getBlock().getLocation();
+				Location portBlock = portal.getLocation().getBlock()
+						.getLocation();
 				if (pLoc.equals(portBlock)) {
 					return portal;
 				}
 			}
 		}
-		
+
 		Iterator<EnderPortal> pitr = portals.iterator();
 		while (pitr.hasNext()) {
 			EnderPortal portal = pitr.next();
 			if (portal.isWorldLoaded()) {
-				Location portBlock = portal.getLocation().getBlock().getLocation();
+				Location portBlock = portal.getLocation().getBlock()
+						.getLocation();
 				if (pLoc.equals(portBlock)) {
 					return portal;
 				}
@@ -226,6 +237,22 @@ public class FileHandler {
 			}
 		}
 		return null;
+	}
+	
+	public boolean isPortalDoor(Block door) {
+		Block block = door.getRelative(BlockFace.DOWN);
+		
+		for (EnderPortal port : this.portals) {
+			if (block.equals(port.getMainBlock()))
+				return true;
+		}
+		
+		for (EnderPortal port : this.globalportals) {
+			if (block.equals(port.getMainBlock()))
+				return true;
+		}
+		
+		return false;
 	}
 
 	public void removePortal(EnderPortal portal) {
