@@ -181,7 +181,9 @@ public class EnderPortal {
 						valid = false;
 					}
 					if (valid) {
-						if (EnderPortals.getFileHandler().canUseHash(hash)) {
+						boolean canUse = EnderPortals.getFileHandler().canUseHash(hash);
+						boolean isGlobal = EnderPortals.getFileHandler().isGlobalHash(hash);
+						if (canUse || isGlobal) {
 							returnVal.setHash(hash);
 							returnVal.setValid();
 						} else {
