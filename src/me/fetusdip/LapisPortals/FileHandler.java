@@ -51,8 +51,7 @@ public class FileHandler {
 			}
 			for (String string : list) {
 				String[] tokens = string.split("[:]");
-				String[] values = new String[7];
-				values = tokens[0].split("[.]");
+				String[] values = tokens[0].split("[.]");
 				EnderPortal enderPortal = new EnderPortal(values[0],
 						Integer.parseInt(values[1]),
 						Integer.parseInt(values[2]),

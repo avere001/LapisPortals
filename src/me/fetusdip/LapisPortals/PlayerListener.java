@@ -69,7 +69,7 @@ public class PlayerListener implements Listener {
 			if (block.getType() == Material.IRON_DOOR_BLOCK) {
 				if (block.getRelative(BlockFace.DOWN).getType() == Material.IRON_DOOR_BLOCK)
 					block = block.getRelative(BlockFace.DOWN);
-				
+
 				if (EnderPortals.getFileHandler().isPortalDoor(block)) {
 					BlockState state = block.getState();
 					Openable door = (Openable) state.getData();
@@ -197,8 +197,18 @@ public class PlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerBreak(BlockBreakEvent event) {
-		EnderPortal port = EnderPortals.getFileHandler().getPortalBlock(
-				event.getBlock());
+		Block block = event.getBlock();
+		Block door = event.getBlock();
+		Material type = door.getType();
+
+		if (type == Material.WOODEN_DOOR || type == Material.IRON_DOOR_BLOCK) {
+			if (door.getRelative(BlockFace.DOWN).getType() == type)
+				door = door.getRelative(BlockFace.DOWN);
+			if (EnderPortals.getFileHandler().isPortalDoor(door))
+				block = door.getRelative(BlockFace.DOWN);
+		}
+
+		EnderPortal port = EnderPortals.getFileHandler().getPortalBlock(block);
 		if (port != null) {
 			EnderPortals.getFileHandler().removePortal(port);
 		}
