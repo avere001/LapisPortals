@@ -3,7 +3,7 @@ LapisPortals
 
 Bukkit plugin for command-less teleportation
 
-Find this project on ![Bukkit](http://dev.bukkit.org/bukkit-plugins/lapisportals/) 
+Find this project on [Bukkit](http://dev.bukkit.org/bukkit-plugins/lapisportals/) 
 
 This plugin adds the ability to create portal structures that link to each other based on the contents of a chest. There are two types of portals: default and global. Default portals will link from portal A to portal B and vice-versa. Global portals act as a central node for teleportation and can eliminate the need for /home and /spawn commands.
 
