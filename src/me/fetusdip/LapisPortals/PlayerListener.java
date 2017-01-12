@@ -1,5 +1,6 @@
 package me.fetusdip.LapisPortals;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -126,12 +127,11 @@ public class PlayerListener implements Listener {
 						}
 					}
 					if (toLoc != null) {
-						if ((event.getPlayer().hasMetadata("lpLastTele"))
+						List<MetadataValue> md = event.getPlayer().getMetadata("lpLastTele");
+						if ((md.size() >= 1)
 								&& (!VaultHook.hasPermission(event.getPlayer(),
 										VaultHook.Perm.NO_DELAY))) {
-							long dt = (System.currentTimeMillis() - ((MetadataValue) event
-									.getPlayer().getMetadata("lpLastTele")
-									.get(0)).asLong()) / 1000L;
+							long dt = (System.currentTimeMillis() - md.get(0).asLong()) / 1000L;
 							double delayRequired = this.plugin.getConfig()
 									.getDouble("TeleDelay");
 							if (dt < delayRequired) {
