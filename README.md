@@ -9,7 +9,7 @@ This plugin adds the ability to create portal structures that link to each other
 
 ## LapisPortals
 
-![LapisPortals Logo](http://dev.bukkit.org/media/images/42/902/LapisPortalsLogo.png "LapisPortals Logo")
+![LapisPortals Logo](https://media.forgecdn.net/avatars/74/467/636164069858889574.png "LapisPortals Logo")
 
 ### Tutorial
 
